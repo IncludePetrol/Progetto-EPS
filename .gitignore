@@ -3,3 +3,8 @@
 
 ### Mac OS ###
 .DS_Store
+
+### Java ###
+out/
+out-test/
+*.class
