@@ -1,16 +1,13 @@
 package laboratorio.modello;
 
 /**
- * <h1>Classe Richiesta</h1>
+ * Rappresenta una richiesta di prestito effettuata da un utente per un determinato tipo di strumento.
  * 
- * Rappresenta una richiesta di prestito avanzata da un utente per una certa tipologia di attrezzatura. 
- * Pensa a questo oggetto come a un "ticket" o a un modulo che viaggia nel sistema: nasce in attesa 
- * di disponibilità, può essere evaso assegnando un esemplare specifico di strumento, oppure può 
- * concludersi con la restituzione o con un annullamento (ad esempio se il thread in attesa viene interrotto).
+ * Ogni richiesta contiene l'utente che l'ha effettuata, il tipo di strumento richiesto, il suo stato corrente ed eventualmente
+ * il codice dello strumento assegnato all'utente.
  * 
- * <p>Nota bene sull'architettura: per garantire la sicurezza e la sincronizzazione nella gestione 
- * concorrente, lo stato di questa richiesta viene modificato esclusivamente all'interno del monitor 
- * di laboratorio.</p>
+ * Le modifiche allo stato della richiesta vengono gestite dal monitor del laboratorio per garantire la corretta
+ * sincronizzazione tra i thread.
  * 
  * @author Runtime Terrors
  * @version 1.0
@@ -23,15 +20,13 @@ public class Richiesta {
     private String codiceStrumento;
 
     /**
-     * Crea una nuova richiesta di prestito per un determinato tipo di strumento da parte di un utente.
+     * Crea una nuova richiesta di prestito.
      * 
-     * <p>All'avvio, la richiesta parte automaticamente nello stato {@link StatoRichiesta#IN_ATTESA} 
-     * e non ha ancora uno strumento specifico associato (il codice è vuoto).</p>
+     * La richiesta viene inizialmente creata nello stato {@link StatoRichiesta#IN_ATTESA} e non ha ancora 
+     * uno strumento associato.
      * 
-     * @invariante La richiesta nasce sempre nello stato IN_ATTESA e con codiceStrumento a null.
-     * 
-     * @param utente L'identificativo o il nome dell'utente che effettua la richiesta
-     * @param tipo   La tipologia di strumento richiesta (es. multimetro, oscilloscopio)
+     * @param utente l'utente che effettua la richiesta
+     * @param tipo il tipo di strumento richiesto.
      */
     public Richiesta(String utente, TipoStrumento tipo) {
         this.utente = utente;
@@ -41,35 +36,34 @@ public class Richiesta {
     }
 
     /**
-     * Restituisce l'utente che ha inoltrato la richiesta di prestito.
+     * Restituisce l'utente che ha effettuato la richiesta.
      * 
-     * @return Il nome o identificativo dell'utente
+     * @return l'utente associato alla richiesta
      */
     public String getUtente() {
         return utente;
     }
 
     /**
-     * Restituisce la tipologia di strumento desiderata dall'utente.
+     * Restituisce il tipo di strumento richiesto.
      * 
-     * @return Il {@link TipoStrumento} associato alla richiesta
+     * @return il tipo di strumento richiesto
      */
     public TipoStrumento getTipo() {
         return tipo;
     }
 
     /**
-     * Restituisce lo stato attuale in cui si trova la richiesta nel ciclo di vita del prestito.
+     * Restituisce lo stato attuale in cui si trova la richiesta.
      * 
-     * @return Lo {@link StatoRichiesta} corrente (es. IN_ATTESA, IN_PRESTITO, ecc.)
+     * @return lo stato corrente della richiesta (es. IN_ATTESA, IN_PRESTITO, ecc.)
      */
     public StatoRichiesta getStato() {
         return stato;
     }
 
     /**
-     * Restituisce il codice identificativo dello strumento fisico che è stato assegnato 
-     * per soddisfare questa richiesta, se il prestito è attivo.
+     * Restituisce il codice identificativo dello strumento associato alla richiesta.
      * 
      * @return Il codice dello strumento, oppure {@code null} se non è ancora stato assegnato
      */
@@ -78,10 +72,8 @@ public class Richiesta {
     }
 
     /**
-     * Segna la richiesta come soddisfatta, associandole un esemplare specifico di strumento 
-     * e aggiornando lo stato in corso di prestito.
-     * 
-     * @param codice Il codice univoco dello strumento assegnato all'utente
+     * Assegna uno strumento alla richiesta e aggiorna il suo stato a IN_PRESTITO.
+     * @param codice il codice dello strumento assegnato
      */
     public void assegna(String codice) {
         stato = StatoRichiesta.IN_PRESTITO;
@@ -89,27 +81,25 @@ public class Richiesta {
     }
 
     /**
-     * Aggiorna lo stato della richiesta indicando che lo strumento è stato regolarmente restituito.
+     * Aggiorna lo stato della richiesta indicando che lo strumento è stato restituito.
      */
     public void restituita() {
         stato = StatoRichiesta.RESTITUITA;
     }
 
     /**
-     * Annulla la richiesta in corso. 
-     * <p>Viene solitamente invocata quando il thread in attesa viene interrotto (InterruptedException) 
-     * mentre aspettava che lo strumento si liberasse.</p>
+     * Annulla la richiesta. 
+     * Questo metodo viene usato quando la richiesta non può più essere completata, ad esempio in caso di interruzione
+     * del thread in attesa.
      */
     public void annulla() {
         stato = StatoRichiesta.ANNULLATA;
     }
 
     /**
-     * Crea e restituisce un oggetto "fotografia" (View) immutabile della richiesta, 
-     * utile per passare i dati all'interfaccia grafica in modo sicuro senza esporre direttamente 
-     * i metodi modificabili del modello.
+     * Crea una rappresentazione della richiesta da usare nell'interfaccia grafica.
      * 
-     * @return Un nuovo {@link RichiestaView} contenente lo stato attuale della richiesta
+     * @return una nuova istanza di {@link RichiestaView} con i dati correnti della richiesta
      */
     public RichiestaView toView() {
         return new RichiestaView(utente, tipo, stato, codiceStrumento);

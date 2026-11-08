@@ -1,15 +1,9 @@
 package laboratorio.modello;
 
 /**
- * <h1>Enum StatoRichiesta</h1>
+ * Rappresenta i possibili stati di una richiesta di prestito.
  * 
- * Descrive le possibili fasi o "stati" che una richiesta di prestito attraversa 
- * all'interno del ciclo di vita gestito dal laboratorio. 
- * 
- * <p>Pensa a questo elenco come ai timbri su un modulo: una richiesta nasce in coda 
- * in attesa di disponibilità, passa allo stato di prestito attivo quando lo strumento 
- * viene effettivamente consegnato, e si conclude regolarmente con la restituzione 
- * oppure con un annullamento (ad esempio se l'utente interrompe l'attesa).</p>
+ * Una richiesta può essere in attesa di uno strumento, in prestito, conclusa con la restituzione o annullata.
  * 
  * @author Runtime Terrors
  * @version 1.0
@@ -17,22 +11,22 @@ package laboratorio.modello;
 public enum StatoRichiesta {
     
     /** 
-     * L'utente è in coda e sta aspettando che si liberi un esemplare dello strumento richiesto. 
+     * La richiesta è in attesa di uno strumento disponibile.
      */
     IN_ATTESA,
     
     /** 
-     * Lo strumento è stato assegnato con successo e il prestito è attualmente in corso. 
+     * Lo strumento è stato assegnato e il prestito è in corso.
      */
     IN_PRESTITO,
     
     /** 
-     * Lo strumento è stato regolarmente riconsegnato in laboratorio e la richiesta è completata. 
+     * Lo strumento è stato restituito e la richiesta è terminata.
      */
     RESTITUITA,
     
     /** 
-     * La richiesta è stata annullata (solitamente a causa dell'interruzione del thread in attesa). 
+     * La richiesta è stata annullata. 
      */
     ANNULLATA
 }
