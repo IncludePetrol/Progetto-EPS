@@ -134,7 +134,7 @@ class LaboratorioTest {
         assertEquals("Alysa", lab.snapshot().strumenti().get(0).assegnatoA());
     }
 
-    // ---------- attesa e interruzione (con thread) ----------
+   
 
     /**
      * Testa il meccanismo di accodamento (wait/notify). Se uno strumento è occupato, 
@@ -198,7 +198,7 @@ class LaboratorioTest {
                 .anyMatch(e -> e.tipo() == TipoEvento.ANNULLAMENTO));
     }
 
-    // ---------- più utenti ----------
+   
 
     /**
      * Lancia contemporaneamente 5 utenti 
