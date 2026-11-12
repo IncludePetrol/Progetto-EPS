@@ -12,8 +12,6 @@ import java.util.List;
  * Include alcuni metodi che permettono di ottenere informazioni sullo stato del laboratorio, es. numero di 
  * strumenti disponibili, in prestito o le richieste in attesa.
  * 
- * @author Runtime Terrors
- * @version 1.0
  */
 public record StatoLab(
     List<StrumentoView> strumenti, 

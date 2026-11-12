@@ -11,8 +11,6 @@ import java.time.LocalTime;
  * La classe è implementata come record, quindi i suoi dati sono immutabili e vengono usati principalmente per 
  * memorizzare e trasferire le informazioni relative agli eventi generati dal laboratorio.
  * 
- * @author Runtime Terrors
- * @version 1.0
  */
 public record Evento(LocalTime orario, TipoEvento tipo, String utente, String strumento) {
 

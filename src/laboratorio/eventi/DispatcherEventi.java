@@ -18,7 +18,6 @@ import java.util.List;
  * modo eventuali modifiche alla lista originale non interferiscono con il
  * processo di notifica.
  *
- * @author Runtime Terrors
  */
 
 public class DispatcherEventi implements Runnable {
