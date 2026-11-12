@@ -8,9 +8,7 @@ package laboratorio.modello;
  * 
  * Le modifiche allo stato della richiesta vengono gestite dal monitor del laboratorio per garantire la corretta
  * sincronizzazione tra i thread.
- * 
- * @author Runtime Terrors
- * @version 1.0
+ *
  */
 public class Richiesta {
 

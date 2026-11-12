@@ -4,9 +4,7 @@ package laboratorio.modello;
  * Rappresenta i possibili stati di una richiesta di prestito.
  * 
  * Una richiesta può essere in attesa di uno strumento, in prestito, conclusa con la restituzione o annullata.
- * 
- * @author Runtime Terrors
- * @version 1.0
+ *
  */
 public enum StatoRichiesta {
     

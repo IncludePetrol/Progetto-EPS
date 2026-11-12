@@ -16,7 +16,6 @@ import java.util.List;
  * Per evitare deadlock e problemi di concorrenza i lock vengono acquisiti seguendo l'ordine
  * Laboratorio -> RegistroEventi.
  * 
- * @author Runtime Terrors
  */
 public class RegistroEventi {
 

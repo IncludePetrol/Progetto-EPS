@@ -5,9 +5,7 @@ package laboratorio.modello;
  * 
  * Contiene una copia dei dati principali della richiesta: utente, tipo di strumento richiesto, stato corrente
  * ed eventuale strumento assegnato.
- * 
- * @author Runtime Terrors
- * @version 1.0
+
  */
 public record RichiestaView(
     String utente, 
