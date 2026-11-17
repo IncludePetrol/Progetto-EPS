@@ -40,8 +40,8 @@ class RegistroEventiTest {
     @Test
     void loStoricoContieneGliEventiInOrdine() {
         RegistroEventi registro = new RegistroEventi();
-        Evento primo = evento("Anna", TipoEvento.ASSEGNAZIONE);
-        Evento secondo = evento("Anna", TipoEvento.RESTITUZIONE);
+        Evento primo = evento("Alysa", TipoEvento.ASSEGNAZIONE);
+        Evento secondo = evento("Alysa", TipoEvento.RESTITUZIONE);
 
         registro.pubblica(primo);
         registro.pubblica(secondo);
@@ -59,7 +59,7 @@ class RegistroEventiTest {
     @Test
     void prelevaRestituisceGliEventiNuoviSenzaCancellareLoStorico() throws Exception {
         RegistroEventi registro = new RegistroEventi();
-        Evento e1 = evento("Anna", TipoEvento.ASSEGNAZIONE);
+        Evento e1 = evento("Alysa", TipoEvento.ASSEGNAZIONE);
         registro.pubblica(e1);
 
         assertEquals(List.of(e1), registro.preleva());
@@ -74,7 +74,7 @@ class RegistroEventiTest {
     @Test
     void loStoricoNonSiPuoModificareDallEsterno() {
         RegistroEventi registro = new RegistroEventi();
-        registro.pubblica(evento("Anna", TipoEvento.ASSEGNAZIONE));
+        registro.pubblica(evento("Alysa", TipoEvento.ASSEGNAZIONE));
 
         assertThrows(UnsupportedOperationException.class,
                 () -> registro.getStorico().add(evento("Kimi", TipoEvento.ATTESA)));
