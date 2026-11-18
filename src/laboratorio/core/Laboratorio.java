@@ -177,9 +177,33 @@ public class Laboratorio {
      * Sostituisce l'intero catalogo degli strumenti, ad esempio a seguito del caricamento da file.
      * Notifica tutti i thread in attesa al termine dell'operazione.
      *
+     * La lista viene validata prima di modificare qualsiasi cosa, così un catalogo non valido
+     * (file manomesso) non lascia il laboratorio a metà.
+     *
      * @param catalogo la nuova lista di strumenti da inserire
+     * @throws IllegalArgumentException se ci sono codici duplicati
+     * @throws IllegalStateException se gli strumenti superano MAX_STRUMENTI o ci sono prestiti o richieste in corso
      */
     public synchronized void ripristina(List<Strumento> catalogo) {
+        if (catalogo.size() > MAX_STRUMENTI) {
+            throw new IllegalStateException("troppi strumenti: massimo " + MAX_STRUMENTI);
+        }
+        Set<String> codici = new java.util.HashSet<>();
+        for (Strumento s : catalogo) {
+            if (!codici.add(s.getCodice())) {
+                throw new IllegalArgumentException("codice duplicato: " + s.getCodice());
+            }
+        }
+        for (Strumento s : strumenti) {
+            if (s.getStato() == StatoStrumento.IN_PRESTITO) {
+                throw new IllegalStateException("ci sono prestiti in corso");
+            }
+        }
+        for (Richiesta r : richieste) {
+            if (r.getStato() == StatoRichiesta.IN_ATTESA) {
+                throw new IllegalStateException("ci sono richieste in attesa");
+            }
+        }
         strumenti.clear();
         strumenti.addAll(catalogo);
         notifyAll();

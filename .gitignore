@@ -8,3 +8,6 @@
 out/
 out-test/
 *.class
+
+### Dati salvati ###
+dati/
