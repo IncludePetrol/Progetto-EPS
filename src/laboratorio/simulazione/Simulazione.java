@@ -4,6 +4,7 @@ import laboratorio.core.Laboratorio;
 import laboratorio.modello.TipoStrumento;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,16 @@ public class Simulazione {
 
     public static final int MIN_UTENTI = 5; // requisito: almeno cinque utenti
 
+    // nomi tra cui vengono scelti gli utenti: tutti diversi, perché il laboratorio
+    // riconosce chi restituisce uno strumento proprio dal nome
+    private static final List<String> NOMI = List.of(
+            "Lucy", "David", "Rebecca", "Roman", "Talia",
+            "Alysa", "Kimi", "Max", "Asuka", "Rei",
+            "Shinji", "Misato", "Kaworu", "Johnny", "Frieren",
+            "Stark", "Fern", "Aldo", "Giovanni", "Giacomo");
+
+    public static final int MAX_UTENTI = NOMI.size(); // un nome diverso per ogni utente
+
     private final Laboratorio lab;
     private final int utenti;
     private final int giri;
@@ -27,6 +38,9 @@ public class Simulazione {
     public Simulazione(Laboratorio lab, int utenti, int giri, long durataPrestitoMs) {
         if (utenti < MIN_UTENTI) {
             throw new IllegalArgumentException("servono almeno " + MIN_UTENTI + " utenti");
+        }
+        if (utenti > MAX_UTENTI) {
+            throw new IllegalArgumentException("al massimo " + MAX_UTENTI + " utenti");
         }
         if (giri < 1) {
             throw new IllegalArgumentException("i giri devono essere almeno 1");
@@ -52,8 +66,10 @@ public class Simulazione {
 
         attivi = utenti;
         pool = Executors.newFixedThreadPool(utenti);
+        List<String> nomi = new ArrayList<>(NOMI);
+        Collections.shuffle(nomi); // a ogni avvio nomi diversi, senza doppioni
         for (int u = 0; u < utenti; u++) {
-            String nome = "Utente" + (u + 1);
+            String nome = nomi.get(u);
             int indice = u;
             pool.execute(() -> {
                 try {

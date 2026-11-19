@@ -33,10 +33,12 @@ public class LaboratorioGUI extends JFrame {
     private final Laboratorio lab = new Laboratorio();
     private final Archivio archivio = new Archivio(Path.of("dati"));
     private Simulazione sim;
+    // richieste già presenti all'avvio della simulazione corrente: la tabella utenti mostra solo quelle successive
+    private int primaRichiesta = 0;
 
     // configurazione
     private final JSpinner[] quantiPerTipo = new JSpinner[TIPI.length];
-    private final JSpinner utenti = new JSpinner(new SpinnerNumberModel(6, Simulazione.MIN_UTENTI, 50, 1));
+    private final JSpinner utenti = new JSpinner(new SpinnerNumberModel(6, Simulazione.MIN_UTENTI, Simulazione.MAX_UTENTI, 1));
     private final JSpinner giri = new JSpinner(new SpinnerNumberModel(3, 1, 100, 1));
     private final JSpinner durata = new JSpinner(new SpinnerNumberModel(800, 0, 10_000, 100));
     private final JButton avvia = new JButton("Avvia simulazione");
@@ -177,7 +179,9 @@ public class LaboratorioGUI extends JFrame {
     private void avviaSimulazione() {
         try {
             applicaCatalogo();
-            sim = new Simulazione(lab, (int) utenti.getValue(), (int) giri.getValue(), (int) durata.getValue());
+            Simulazione nuova = new Simulazione(lab, (int) utenti.getValue(), (int) giri.getValue(), (int) durata.getValue());
+            primaRichiesta = lab.snapshot().richieste().size();
+            sim = nuova;
             sim.avvia();
         } catch (RuntimeException ex) {
             errore(ex.getMessage());
@@ -262,10 +266,11 @@ public class LaboratorioGUI extends JFrame {
         aggiornaStrumenti(s);
     }
 
-    // per ogni utente mostra richiesta più recente
+    // per ogni utente della simulazione corrente mostra la richiesta più recente
     private void aggiornaUtenti(StatoLab s) {
         Map<String, RichiestaView> ultima = new LinkedHashMap<>();
-        for (RichiestaView r : s.richieste()) {
+        List<RichiestaView> richieste = s.richieste();
+        for (RichiestaView r : richieste.subList(Math.min(primaRichiesta, richieste.size()), richieste.size())) {
             ultima.put(r.utente(), r);
         }
         modelloUtenti.setRowCount(0);
