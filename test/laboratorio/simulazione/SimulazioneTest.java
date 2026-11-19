@@ -42,6 +42,15 @@ class SimulazioneTest {
     }
 
     /**
+     * Gli utenti non possono superare i nomi disponibili, altrimenti due avrebbero lo stesso nome.
+     */
+    @Test
+    void nonPiuUtentiDeiNomiDisponibili() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Simulazione(lab, Simulazione.MAX_UTENTI + 1, 1, 10));
+    }
+
+    /**
      * Ogni utente deve fare almeno un giro.
      */
     @Test

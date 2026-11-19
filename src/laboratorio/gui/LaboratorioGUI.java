@@ -78,13 +78,11 @@ public class LaboratorioGUI extends JFrame {
         add(grigliaStrumenti, BorderLayout.CENTER);
         add(pannelloLog(), BorderLayout.EAST);
 
-        caricaDati(false); // requisito all'avvio si ricaricano catalogo e storico
-        if (lab.snapshot().strumenti().isEmpty()) {
-            quantiPerTipo[0].setValue(2); // catalogo di default
-            quantiPerTipo[1].setValue(1);
-            quantiPerTipo[2].setValue(1);
-            applicaCatalogo();
-        }
+        // i dati salvati si caricano solo con il bottone "Carica dati"
+        quantiPerTipo[0].setValue(2);
+        quantiPerTipo[1].setValue(1);
+        quantiPerTipo[2].setValue(1);
+        applicaCatalogo();
 
         // il dispatcher consegna gli eventi su un suo thread
         DispatcherEventi dispatcher = new DispatcherEventi(lab.getRegistro());
@@ -170,7 +168,7 @@ public class LaboratorioGUI extends JFrame {
         p.add(bottoni, BorderLayout.SOUTH);
 
         salva.addActionListener(e -> salvaDati());
-        carica.addActionListener(e -> caricaDati(true));
+        carica.addActionListener(e -> caricaDati());
         return p;
     }
 
@@ -219,13 +217,11 @@ public class LaboratorioGUI extends JFrame {
         }
     }
 
-    private void caricaDati(boolean avvisa) {
+    private void caricaDati() {
         try {
             archivio.carica(lab);
         } catch (IOException | RuntimeException ex) {
-            if (avvisa) {
-                errore("Caricamento fallito: " + ex.getMessage());
-            }
+            errore("Caricamento fallito: " + ex.getMessage());
             return;
         }
         int[] conta = contaPerTipo(lab.snapshot());

@@ -75,6 +75,62 @@ class LaboratorioTest {
         assertThrows(IllegalStateException.class, () -> lab.rimuoviStrumento("OSC-01"));
     }
 
+    /**
+     * Il ripristino (es. da file) deve sostituire completamente il catalogo corrente.
+     */
+    @Test
+    void ripristinareSostituisceIlCatalogo() {
+        lab.aggiungiStrumento(new Strumento("OSC-01", OSC));
+
+        lab.ripristina(List.of(new Strumento("GEN-01", TipoStrumento.GENERATORE),
+                new Strumento("MUL-01", TipoStrumento.MULTIMETRO)));
+
+        List<StrumentoView> strumenti = lab.snapshot().strumenti();
+        assertEquals(2, strumenti.size());
+        assertEquals("GEN-01", strumenti.get(0).codice());
+        assertEquals("MUL-01", strumenti.get(1).codice());
+    }
+
+    /**
+     * Un catalogo con più strumenti del massimo non deve essere ripristinato
+     * e il laboratorio deve restare com'era.
+     */
+    @Test
+    void nonSiRipristinaUnCatalogoTroppoGrande() {
+        lab.aggiungiStrumento(new Strumento("OSC-01", OSC));
+        List<Strumento> troppi = new ArrayList<>();
+        for (int i = 1; i <= Laboratorio.MAX_STRUMENTI + 1; i++) {
+            troppi.add(new Strumento("S-" + i, TipoStrumento.GENERATORE));
+        }
+
+        assertThrows(IllegalStateException.class, () -> lab.ripristina(troppi));
+        assertEquals(1, lab.snapshot().strumenti().size());
+    }
+
+    /**
+     * Un catalogo con codici duplicati (file manomesso) non deve essere ripristinato.
+     */
+    @Test
+    void nonSiRipristinaUnCatalogoConCodiciDuplicati() {
+        assertThrows(IllegalArgumentException.class, () -> lab.ripristina(List.of(
+                new Strumento("OSC-01", OSC), new Strumento("OSC-01", OSC))));
+        assertTrue(lab.snapshot().strumenti().isEmpty());
+    }
+
+    /**
+     * Non si può sostituire il catalogo mentre uno strumento è in prestito,
+     * altrimenti l'utente resterebbe con uno strumento che non esiste più.
+     */
+    @Test
+    void nonSiRipristinaConPrestitiInCorso() throws Exception {
+        lab.aggiungiStrumento(new Strumento("OSC-01", OSC));
+        lab.richiedi("Alysa", OSC);
+
+        assertThrows(IllegalStateException.class,
+                () -> lab.ripristina(List.of(new Strumento("GEN-01", TipoStrumento.GENERATORE))));
+        assertEquals("OSC-01", lab.snapshot().strumenti().get(0).codice());
+    }
+
     // ---------- richiesta e restituzione ----------
 
     /**

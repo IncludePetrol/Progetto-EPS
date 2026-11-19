@@ -79,4 +79,36 @@ class RegistroEventiTest {
         assertThrows(UnsupportedOperationException.class,
                 () -> registro.getStorico().add(evento("Kimi", TipoEvento.ATTESA)));
     }
+
+    /**
+     * Il ripristino (es. da file) deve sostituire lo storico corrente con quello passato.
+     */
+    @Test
+    void ripristinareSostituisceLoStorico() {
+        RegistroEventi registro = new RegistroEventi();
+        registro.pubblica(evento("Alysa", TipoEvento.ASSEGNAZIONE));
+        Evento caricato = evento("Kimi", TipoEvento.RESTITUZIONE);
+
+        registro.ripristina(List.of(caricato));
+
+        assertEquals(List.of(caricato), registro.getStorico());
+    }
+
+    /**
+     * Gli eventi ripristinati appartengono al passato: non devono essere notificati
+     * di nuovo, quindi la coda delle notifiche va svuotata.
+     *
+     * @throws Exception in caso di errori imprevisti durante il prelievo
+     */
+    @Test
+    void ripristinareSvuotaLaCodaDelleNotifiche() throws Exception {
+        RegistroEventi registro = new RegistroEventi();
+        registro.pubblica(evento("Alysa", TipoEvento.ASSEGNAZIONE));
+        registro.ripristina(List.of(evento("Kimi", TipoEvento.ATTESA)));
+        Evento nuovo = evento("Max", TipoEvento.ASSEGNAZIONE);
+
+        registro.pubblica(nuovo);
+
+        assertEquals(List.of(nuovo), registro.preleva());
+    }
 }
