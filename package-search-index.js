@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"laboratorio"},{"l":"laboratorio.core"},{"l":"laboratorio.eventi"},{"l":"laboratorio.gui"},{"l":"laboratorio.modello"},{"l":"laboratorio.persistenza"},{"l":"laboratorio.simulazione"}];updateSearchResults();
